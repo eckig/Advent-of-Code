@@ -1,6 +1,6 @@
 package io.github.eckig.aoc2025;
 
-public class Day2
+public class Day1_2
 {
     static void main()
     {
