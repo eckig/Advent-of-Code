@@ -16,6 +16,7 @@ public class Day4
             }
         }
 
+        // part 1:
         int positions = 0;
         for (int a = 0; a < map.length; a++)
         {
@@ -29,6 +30,29 @@ public class Day4
             }
         }
         System.out.println(positions);
+
+        // part 2:
+        int removed = 0;
+        boolean changes;
+        do
+        {
+            changes = false;
+            for (int a = 0; a < map.length; a++)
+            {
+                for (int b = 0; b < map[a].length; b++)
+                {
+                    final var val = map[a][b];
+                    if (val == '@' && countAdjacentRollsOfPaper(a, b, map) < 4)
+                    {
+                        map[a][b] = 'x';
+                        removed++;
+                        changes = true;
+                    }
+                }
+            }
+        }
+        while (changes);
+        System.out.println(removed);
     }
 
     private static int countAdjacentRollsOfPaper(final int a, final int b, final char[][] map)
