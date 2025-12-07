@@ -12,6 +12,7 @@ public class Day6
         final var input = """
 """;
 
+        // part 1:
         final var dataByColumn = new HashMap<Integer, List<String>>();
         for (final var iter = input.lines().iterator(); iter.hasNext();)
         {
@@ -22,10 +23,13 @@ public class Day6
                 dataByColumn.computeIfAbsent(i, _ -> new ArrayList<>()).add(cols.get(i));
             }
         }
-        System.out.println(dataByColumn.values().stream().mapToLong(Day6::compute).sum());
+        System.out.println(dataByColumn.values().stream().mapToLong(Day6::computePart1).sum());
+
+        // part 2:
+        System.out.println(dataByColumn.values().stream().mapToLong(Day6::computePart2).sum());
     }
 
-    private static long compute(final List<String> pData)
+    private static long computePart1(final List<String> pData)
     {
         final var operator = pData.removeLast();
         long result = -1;
@@ -40,6 +44,38 @@ public class Day6
                 default -> throw new IllegalStateException();
             };
         }
+        pData.addLast(operator);
         return result;
+    }
+
+    private static long computePart2(final List<String> pData)
+    {
+        final var operator = pData.removeLast();
+        final var len = pData.stream().mapToInt(String::length).max().orElseThrow();
+        final var numbers = new ArrayList<Long>();
+        for (int i = len - 1; i >= 0; i--)
+        {
+            String number = null;
+            for (String d : pData)
+            {
+                while (d.length() < len)
+                {
+                    d = " " + d;
+                }
+                final var num = i >= d.length() ? 0 : Character.getNumericValue(d.charAt(i));
+                if (num > 0)
+                {
+                    number = number == null ? String.valueOf(num) : number + num;
+                }
+            }
+            numbers.add(Long.parseLong(number));
+        }
+
+        return switch (operator)
+        {
+            case "+" -> numbers.stream().mapToLong(l -> l).sum();
+            case "*" -> numbers.stream().mapToLong(l -> l).reduce(1, Math::multiplyExact);
+            default -> throw new IllegalStateException();
+        };
     }
 }
